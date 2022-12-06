@@ -1,3 +1,5 @@
+from time import time
+
 def rec_fib(n):
     if n <= 1:
         return n
@@ -12,5 +14,6 @@ def handle(req):
     except ValueError:
         print("Please provide a valid integer > 0 as input")
     else:
+        start = time()
         fib = rec_fib(req)
-        print(fib)
+        print("n: {}, fib: {}, time: {}s".format(req, fib, time()-start))
