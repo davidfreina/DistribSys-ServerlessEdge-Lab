@@ -1,9 +1,0 @@
-provider:
-  name: openfaas
-  gateway: http://127.0.0.1:8080
-
-functions:
-  fibonacci:
-    lang: python3
-    handler: ./fibonacci
-    image: macko99vu/fibonacci

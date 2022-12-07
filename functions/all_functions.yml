@@ -1,0 +1,28 @@
+provider:
+  name: openfaas
+  gateway: http://127.0.0.1:8080
+
+functions:
+  fibonacci:
+    image: macko99vu/fibonacci
+    environment:
+      read_timeout: "5m5s"
+      write_timeout: "5m5s"
+      exec_timeout: "5m5s"
+      annotations:
+        prometheus.io.scrape: true
+  matmul:
+    image: macko99vu/matmul
+    environment:
+      read_timeout: "5m5s"
+      write_timeout: "5m5s"
+      exec_timeout: "5m5s"
+      annotations:
+        prometheus.io.scrape: true
+  file:
+    image: macko99vu/file-upload
+    environment:
+      read_timeout: "5m5s"
+      write_timeout: "5m5s"
+      exec_timeout: "5m5s"
+      
