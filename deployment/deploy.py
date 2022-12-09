@@ -23,9 +23,17 @@ git.repo(
     dest="kube-prometheus"
 )
 
+git.repo(
+    name="clone kube-prometheus",
+    src="https://github.com/davidfreina/kube-prometheus-configuration.git",
+    dest="kube-prometheus-configuration"
+)
+
 server.shell(
     name="deploy kube-prometheus (all-in-one monitoring)",
     commands=[
+        "rm -rf kube-prometheus/manifests",
+        "cp -r kube-prometheus-configuration/manifests kube-prometheus/manifests",
         "kubectl apply --server-side -f kube-prometheus/manifests/setup",
         "kubectl wait --for condition=Established --all CustomResourceDefinition --namespace=monitoring",
         "kubectl apply -f kube-prometheus/manifests/",
@@ -44,7 +52,7 @@ server.shell(
         "nohup kubectl port-forward -n openfaas svc/gateway 8080:8080 > /dev/null 2>&1 &",
         "nohup kubectl port-forward -n monitoring --address {} svc/grafana 3000:3000 > /dev/null 2>&1 &".format(
             cloud_controller_ip),
-        "nohup kubectl port-forward -n monitoring --address {} svc/prometheus 9090:9090 > /dev/null 2>&1 &".format(
+        "nohup kubectl port-forward -n monitoring --address {} svc/prometheus-k8s 9090:9090 > /dev/null 2>&1 &".format(
             cloud_controller_ip)
     ]
 )
