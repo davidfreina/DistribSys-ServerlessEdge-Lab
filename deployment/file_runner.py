@@ -16,9 +16,9 @@ if len(files) > 100:
         os.remove('./images/' + file)
 
 manager = Manager()
-pool = mp.Pool(8)
+pool = mp.Pool(12)
 
-for _ in range(8):
+for _ in range(12):
     pool.apply_async(thread_wrapper)
 
 pool.close()

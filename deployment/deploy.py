@@ -109,14 +109,14 @@ deploy_images_result = server.shell(
     ]
 )
 
-deploy_images_result = server.shell(
-    name="scale funtions manually",
-    commands=[
-        "kubectl autoscale deploy/file -n openfaas-fn --min=8 --max=10 | echo $?",
-        "kubectl autoscale deploy/fibonacci -n openfaas-fn --min=8 --max=10 | echo $?",
-        "kubectl autoscale deploy/matmul -n openfaas-fn --min=8 --max=10 | echo $?",
-    ]
-)
+# deploy_images_result = server.shell(
+#     name="scale funtions manually",
+#     commands=[
+#         "kubectl autoscale deploy/file -n openfaas-fn --min=8 --max=10 | echo $?",
+#         "kubectl autoscale deploy/fibonacci -n openfaas-fn --min=8 --max=10 | echo $?",
+#         "kubectl autoscale deploy/matmul -n openfaas-fn --min=8 --max=10 | echo $?",
+#     ]
+# )
 
 pull_data_sets_result = server.shell(
     name="pull images from NASA telescope",
