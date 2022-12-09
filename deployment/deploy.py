@@ -73,9 +73,9 @@ deploy_images_result = server.shell(
 deploy_images_result = server.shell(
     name="scale funtions manually",
     commands=[
-        "kubectl autoscale deploy/file -n openfaas-fn --min=10 --max=10",
-        "kubectl autoscale deploy/fibonacci -n openfaas-fn --min=10 --max=10",
-        "kubectl autoscale deploy/matmul -n openfaas-fn --min=10 --max=10",
+        "kubectl autoscale deploy/file -n openfaas-fn --min=8 --max=10",
+        "kubectl autoscale deploy/fibonacci -n openfaas-fn --min=8 --max=10",
+        "kubectl autoscale deploy/matmul -n openfaas-fn --min=8 --max=10",
 ]
 )
 
