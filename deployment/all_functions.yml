@@ -8,13 +8,15 @@ functions:
     labels:
       com.openfaas.scale.min: 1
       com.openfaas.scale.max: 10
-      com.openfaas.scale.target: 100
-      com.openfaas.scale.type: rps
-      com.openfaas.scale.target-proportion: 0.5
+      com.openfaas.scale.target: 1
+      com.openfaas.scale.type: capacity
+      com.openfaas.scale.factor: 50
+      com.openfaas.scale.target-proportion: 0.1
     environment:
       read_timeout: "5m5s"
       write_timeout: "5m5s"
       exec_timeout: "5m5s"
+#      max_inflight: 5
     annotations:
       prometheus.io.scrape: "true"
   matmul:
@@ -22,13 +24,15 @@ functions:
     labels:
       com.openfaas.scale.min: 1
       com.openfaas.scale.max: 10
-      com.openfaas.scale.target: 100
-      com.openfaas.scale.type: rps   
-      com.openfaas.scale.target-proportion: 0.5
+      com.openfaas.scale.target: 1
+      com.openfaas.scale.type: capacity   
+      com.openfaas.scale.factor: 50
+      com.openfaas.scale.target-proportion: 0.1
     environment:
       read_timeout: "5m5s"
       write_timeout: "5m5s"
       exec_timeout: "5m5s"
+#      max_inflight: 5
     annotations:
       prometheus.io.scrape: "true"
   file:
@@ -36,12 +40,14 @@ functions:
     labels:
       com.openfaas.scale.min: 1
       com.openfaas.scale.max: 10
-      com.openfaas.scale.target: 100
-      com.openfaas.scale.type: rps   
-      com.openfaas.scale.target-proportion: 0.5
+      com.openfaas.scale.target: 1
+      com.openfaas.scale.type: capacity
+      com.openfaas.scale.factor: 50
+      com.openfaas.scale.target-proportion: 0.1
     environment:
       read_timeout: "5m5s"
       write_timeout: "5m5s"
       exec_timeout: "5m5s"
+#      max_inflight: 5
     annotations:
       prometheus.io.scrape: "true"

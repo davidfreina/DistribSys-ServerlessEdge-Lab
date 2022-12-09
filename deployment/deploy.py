@@ -6,7 +6,7 @@ server.shell(
 )
 
 apt.packages(
-    name="ensure unzip top is installed",
+    name="ensure unzip is installed",
     packages=["unzip"],
     update=False,
     _sudo=True,
