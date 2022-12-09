@@ -12,7 +12,7 @@ def thread_wrapper():
 files = os.listdir('./images')
 
 if len(files) > 100:
-    for file in sample(files, 80):
+    for file in sample(files, 90):
         os.remove('./images/' + file)
 
 manager = Manager()

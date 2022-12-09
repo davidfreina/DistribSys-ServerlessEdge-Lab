@@ -5,6 +5,12 @@ provider:
 functions:
   fibonacci:
     image: macko99vu/fibonacci
+    labels:
+      com.openfaas.scale.min: 1
+      com.openfaas.scale.max: 10
+      com.openfaas.scale.target: 100
+      com.openfaas.scale.type: rps
+      com.openfaas.scale.target-proportion: 0.5
     environment:
       read_timeout: "5m5s"
       write_timeout: "5m5s"
@@ -13,6 +19,12 @@ functions:
       prometheus.io.scrape: "true"
   matmul:
     image: macko99vu/matmul
+    labels:
+      com.openfaas.scale.min: 1
+      com.openfaas.scale.max: 10
+      com.openfaas.scale.target: 100
+      com.openfaas.scale.type: rps   
+      com.openfaas.scale.target-proportion: 0.5
     environment:
       read_timeout: "5m5s"
       write_timeout: "5m5s"
@@ -21,6 +33,12 @@ functions:
       prometheus.io.scrape: "true"
   file:
     image: macko99vu/file-upload
+    labels:
+      com.openfaas.scale.min: 1
+      com.openfaas.scale.max: 10
+      com.openfaas.scale.target: 100
+      com.openfaas.scale.type: rps   
+      com.openfaas.scale.target-proportion: 0.5
     environment:
       read_timeout: "5m5s"
       write_timeout: "5m5s"

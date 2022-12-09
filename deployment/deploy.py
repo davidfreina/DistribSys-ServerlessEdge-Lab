@@ -65,8 +65,8 @@ files.put(
 deploy_images_result = server.shell(
     name="deploy the functions to openfaas",
     commands=[
-#        "if [ $(faas-cli list | grep 'fibonacci\|file\|matmul' | wc -l) -eq 3 ]; then echo 'already deployed'; else faas-cli deploy --yaml ./tmp/all_functions.yml; fi",
-        "faas-cli deploy --yaml ./tmp/all_functions.yml"
+       "if [ $(faas-cli list | grep 'fibonacci\|file\|matmul' | wc -l) -eq 3 ]; then echo 'already deployed'; else faas-cli deploy --yaml ./tmp/all_functions.yml; fi",
+        # "faas-cli deploy --yaml ./tmp/all_functions.yml"
 ]
 )
 
