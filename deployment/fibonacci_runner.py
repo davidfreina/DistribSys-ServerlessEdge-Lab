@@ -5,8 +5,8 @@ import os
 
 def thread_wrapper():
     for i in range(15, 42):
-        os.system(
-            'curl -sS http://127.0.0.1:8080/function/fibonacci -d {}'.format(i))
+        os.system('curl -sS http://127.0.0.1:8080/function/fibonacci -d {}'.format(i))
+        os.system('curl -sS http://127.0.0.1:8080/function/fibonacci -d {}'.format(i))
 
 
 manager = Manager()
