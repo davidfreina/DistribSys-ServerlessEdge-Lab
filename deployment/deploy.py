@@ -1,5 +1,9 @@
-from pyinfra.operations import server, apt, files
+from pyinfra.operations import server, apt, files, git
+from pyinfra.facts.hardware import Ipv4Addresses
+from pyinfra import inventory
 
+cloud_controller_ip = next(filter(lambda ip: ip.startswith('192'), list(inventory.get_host('cloudcontroller').get_fact(
+    Ipv4Addresses).values())))
 
 server.shell(
     name="echo hostname",
@@ -8,15 +12,41 @@ server.shell(
 
 apt.packages(
     name="ensure unzip top is installed",
-    packages=["unzip"],
+    packages=["unzip", "net-tools"],
     update=False,
     _sudo=True,
+)
+
+git.repo(
+    name="clone kube-prometheus",
+    src="https://github.com/prometheus-operator/kube-prometheus.git",
+    dest="kube-prometheus"
+)
+
+server.shell(
+    name="deploy kube-prometheus (all-in-one monitoring)",
+    commands=[
+        "kubectl apply --server-side -f kube-prometheus/manifests/setup",
+        "kubectl wait --for condition=Established --all CustomResourceDefinition --namespace=monitoring",
+        "kubectl apply -f kube-prometheus/manifests/",
+        "kubectl wait --for condition=Ready pods --namespace=monitoring -l app.kubernetes.io/component=grafana  --timeout=90s"
+    ]
 )
 
 server.shell(
     name="enable k8 port command",
     commands=[
-        "kubectl port-forward -n openfaas svc/gateway 8080:8080 2>&1 >/dev/null &"]
+        "nohup kubectl port-forward -n openfaas svc/gateway 8080:8080 > /dev/null 2>&1 &",
+        "nohup kubectl port-forward -n monitoring --address {} svc/grafana 3000:3000 > /dev/null 2>&1 &".format(
+            cloud_controller_ip),
+        "nohup kubectl port-forward -n monitoring --address {} svc/prometheus 9090:9090 > /dev/null 2>&1 &".format(
+            cloud_controller_ip)
+    ]
+)
+
+server.wait(
+    name="wait for openfaas gateway port to be available",
+    port=8080
 )
 
 server.shell(
