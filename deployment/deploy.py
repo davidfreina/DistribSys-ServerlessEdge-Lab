@@ -41,6 +41,17 @@ server.shell(
     ]
 )
 
+# Remember to update continuum/execution_model/openFaas.yml
+# shell: arkade install openfaas --set openfaasPRO=False --set gateway.logsProviderURL=http://loki-stack-headless.monitoring.svc:3100/
+
+server.shell(
+    name="add Loki as persistent log provider to Grafana",
+    commands=[
+        "arkade install loki --namespace monitoring"
+    ]
+)
+
+
 server.shell(
     name="creating tmp directory",
     commands=["mkdir -p tmp"]
