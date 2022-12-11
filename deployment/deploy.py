@@ -47,7 +47,8 @@ server.shell(
 server.shell(
     name="add Loki as persistent log provider to Grafana",
     commands=[
-        "arkade install loki --namespace monitoring"
+        "arkade install loki --namespace monitoring",
+        "kubectl wait --for condition=Ready pods --namespace=monitoring -l app=loki --timeout=90s"
     ]
 )
 
