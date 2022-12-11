@@ -30,6 +30,13 @@ git.repo(
 )
 
 server.shell(
+    name="remove kubectl port forwarding",
+    commands=[
+        "killall kubectl || true"
+    ]
+)
+
+server.shell(
     name="deploy kube-prometheus (all-in-one monitoring)",
     commands=[
         "rm -rf kube-prometheus/manifests",
@@ -52,6 +59,13 @@ server.shell(
     ]
 )
 
+server.shell(
+    name="add Loki to OpenFaaS",
+    commands=[
+        "arkade install openfaas --set openfaasPRO=False --set gateway.logsProviderURL=http://loki-stack-headless.monitoring.svc:3100/",
+        "kubectl wait --for condition=Ready pods --namespace=openfaas -l app=gateway --timeout=90s"
+    ]
+)
 
 server.shell(
     name="creating tmp directory",
@@ -61,7 +75,6 @@ server.shell(
 server.shell(
     name="enable k8 port command",
     commands=[
-        "pkill kubectl",
         "nohup kubectl port-forward -n openfaas svc/gateway 8080:8080 > /dev/null 2>&1 &",
         "nohup kubectl port-forward -n monitoring --address {} svc/grafana 3000:3000 > /dev/null 2>&1 &".format(
             cloud_controller_ip),
