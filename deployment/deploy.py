@@ -49,6 +49,7 @@ server.shell(
 server.shell(
     name="enable k8 port command",
     commands=[
+        "pkill kubectl",
         "nohup kubectl port-forward -n openfaas svc/gateway 8080:8080 > /dev/null 2>&1 &",
         "nohup kubectl port-forward -n monitoring --address {} svc/grafana 3000:3000 > /dev/null 2>&1 &".format(
             cloud_controller_ip),
