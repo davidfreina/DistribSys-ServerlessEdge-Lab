@@ -1,27 +1,51 @@
-## HOW TO
+# HOW TO
+### Prerequisites
+- [pyinfra](https://pyinfra.com/)
 
-`python3 main.py configuration/config_test.cfg`
+In order to deploy to the right `cloud_controller` we need some information of the user.
+This information should be provided in the [inventory.py](deployment/inventory.py).
+The user should add an additional ``elif`` statement with the respective username and IP informations.
 
-`ssh cloud_controller_ds2022-lab2-1@192.168.132.2 -i /home/ds2022-lab2-1/.ssh/id_rsa_benchmark`
+Furthermore the user has to edit the configurations files for continuum ([cloud_conf.cfg](configurations/cloud_conf.cfg) and [edge_conf.cfg](configurations/edge_conf.cfg)).
+The changes need to be made to the following keys:
+- `base_path`
+- `middleIP`
 
-`nohup kubectl port-forward -n openfaas svc/gateway 8080:8080 &`
+### Deploying the project
 
-`PASSWORD=$(kubectl get secret -n openfaas basic-auth -o jsonpath="{.data.basic-auth-password}" | base64 --decode; echo)`
+````bash
+cd ./DistribSys-ServerlessEdge-Lab/deployment/
+````
 
-`echo -n $PASSWORD | faas-cli login --username admin --password-stdin`
+Due to the automation provided by `pyinfra` setting up the monitoring and running various tests is as easy as:
 
-`docker login`
+````bash
+pyinfra inventory.py deploy.py
+````
 
-`mkdir functions && cd functions`
+### Open Grafana on your localhost
 
-`export OPENFAAS_PREFIX=macko99vu`
+To view the dashboards locally in your browser you need to forward port 3000 from the `cloud_controller` to your localhost.
 
-`docker pull macko99vu/file-upload:latest`
+We found the easiest way to do this is by configuring proxy jumping from your host to the respective node on the dss cluster.
 
-`faas-cli deploy --image macko99vu/file-upload --name file`
+You can find an example ssh-config and command down below which forwards port 3000 from node4 on the dss cluster directly to your local host.
 
-`curl http://127.0.0.1:8080/function/file -d 'abc'`
+````
+Host dss-cluster
+        Hostname <DSS_CLUSTER_HOSTNAME>
+        User <DSS_CLUSTER_USERNAME>
+        IdentityFile <PATH_TO_PRIVATE_KEY_DSS_CLUSTER>
+        PreferredAuthentications publickey
 
-`curl -o img.jpg https://unsplash.com/photos/v3-zcCWMjgM/download?ixid=MnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjY5ODM3NTI5&force=true&w=2400`
+Host dss-node
+        Hostname <DSS_NODE_HOSTNAME>
+        User <DSS_NODE_USERNAME>
+        ProxyJump dss-cluster
+        IdentityFile <PATH_TO_PRIVATE_KEY_DSS_NODE>
+        PreferredAuthentications publickey
+````
 
-`curl -o result http://127.0.0.1:8080/function/file -d @img.jpg`
+````bash
+ssh -L 3000:<CLOUD_CONTROLLER_IP>:3000 -J dss-cluster dss-node
+````
