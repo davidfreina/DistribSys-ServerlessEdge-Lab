@@ -5,11 +5,6 @@ from pyinfra import inventory
 cloud_controller_ip = next(filter(lambda ip: ip.startswith('192'), list(inventory.get_host('cloudcontroller').get_fact(
     Ipv4Addresses).values())))
 
-server.shell(
-    name="echo hostname",
-    commands=["hostname"]
-)
-
 apt.packages(
     name="ensure unzip top is installed",
     packages=["unzip", "net-tools"],
@@ -18,13 +13,13 @@ apt.packages(
 )
 
 git.repo(
-    name="clone kube-prometheus",
+    name="clone prometheus-operator/kube-prometheus",
     src="https://github.com/prometheus-operator/kube-prometheus.git",
     dest="kube-prometheus"
 )
 
 git.repo(
-    name="clone kube-prometheus",
+    name="clone davidfreina/kube-prometheus-configuration",
     src="https://github.com/davidfreina/kube-prometheus-configuration.git",
     dest="kube-prometheus-configuration"
 )
@@ -52,24 +47,19 @@ server.shell(
 # shell: arkade install openfaas --set openfaasPRO=False --set gateway.logsProviderURL=http://loki-stack-headless.monitoring.svc:3100/
 
 server.shell(
-    name="add Loki as persistent log provider to Grafana",
+    name="add Loki as persistent log aggregator",
     commands=[
         "arkade install loki --namespace monitoring",
-        "kubectl wait --for condition=Ready pods --namespace=monitoring -l app=loki --timeout=90s"
+        "kubectl wait --for condition=Ready pods --namespace=monitoring -l app=loki --timeout=300s"
     ]
 )
 
 server.shell(
-    name="add Loki to OpenFaaS",
+    name="redeploy OpenFaaS with Loki as log provider",
     commands=[
         "arkade install openfaas --set openfaasPRO=False --set gateway.logsProviderURL=http://loki-stack-headless.monitoring.svc:3100/",
         "kubectl wait --for condition=Ready pods --namespace=openfaas -l app=gateway --timeout=90s"
     ]
-)
-
-server.shell(
-    name="creating tmp directory",
-    commands=["mkdir -p tmp"]
 )
 
 server.shell(
@@ -110,6 +100,11 @@ server.shell(
         "docker pull macko99vu/file-upload:latest",
         "docker pull macko99vu/fibonacci:latest",
         "docker pull macko99vu/matmul:latest"]
+)
+
+server.shell(
+    name="creating tmp directory",
+    commands=["mkdir -p tmp"]
 )
 
 files.put(
