@@ -85,11 +85,6 @@ server.shell(
 )
 
 server.shell(
-    name="docker login command",
-    commands=["docker login -u macko99vu -p ZLZ@HSBsa654ey6"]
-)
-
-server.shell(
     name="export function name prefix",
     commands=["export OPENFAAS_PREFIX=macko99vu"]
 )
